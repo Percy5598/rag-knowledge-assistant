@@ -1,32 +1,13 @@
-"""
-Generator will take the prompt, send it to LLM and return the answer.
-RAG pipeline
-
-question
-    ↓
-retrieve()
-    ↓
-retrieved_chunks
-    ↓
-create_rag_prompt()
-    ↓
-prompt
-    ↓
-generate()
-    ↓
-answer
-
-This is a temporary generator without LLM
-"""
-def generate_answer(prompt):
+def generate_answer(prompt: str) -> str:
     """
-    Generate an answer from a prompt.
+    Temporary generator.
 
-    Temporary mock generator used while we do not
-    have a real LLM connected.
+    This function will later be replaced by
+    a real local LLM or API-based LLM.
     """
 
-    if "30 days" in prompt:
-        return "Employees receive 30 days of annual leave per calendar year."
-
-    return "I do not have enough information to answer the question."
+    return (
+        "The RAG prompt has been successfully created. "
+        "A real language model needs to be connected "
+        "to generate the final answer."
+    )

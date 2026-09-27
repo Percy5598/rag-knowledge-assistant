@@ -1,29 +1,38 @@
-import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
+from src.vector_store import search_index
+
+
 def retrieve(
-    query,
-    documents,
-    document_embeddings,
+    query: str,
     model,
-    top_k = 3,
-): 
-    """
-    Retrieve the most relevant documents for a query.
-    """ 
-    query_embedding = model.encode([query])
-    scores = cosine_similarity(
+    index,
+    chunks: list[dict],
+    top_k: int = 3,
+) -> list[dict]:
+    """Retrieve the most relevant chunks."""
+
+    query_embedding = model.encode(
+        query,
+        convert_to_numpy=True,
+        normalize_embeddings=True,
+    )
+
+    scores, indices = search_index(
+        index,
         query_embedding,
-        document_embeddings,
-    )[0]
-    top_indices = np.argsort(scores)[::-1][:top_k]
+        top_k=top_k,
+    )
+
     results = []
-    for index in top_indices:
-        results.append(
-            {
-                "text": documents[index],
-                "score": float(scores[index]), 
-            }
-        )
 
+    for score, index_position in zip(scores, indices):
 
-    return results 
+        if index_position < 0:
+            continue
+
+        result = chunks[index_position].copy()
+
+        result["score"] = float(score)
+
+        results.append(result)
+
+    return results
