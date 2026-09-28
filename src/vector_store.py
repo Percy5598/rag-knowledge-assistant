@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 
 import faiss
 import numpy as np
@@ -61,3 +62,37 @@ def load_index(path: Path):
     return faiss.read_index(
         str(path)
     )
+
+
+def save_chunks(chunks: list[dict], path: Path):
+    """Save chunk metadata to JSON."""
+
+    path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    with open(
+        path,
+        "w",
+        encoding="utf-8",
+    ) as file:
+
+        json.dump(
+            chunks,
+            file,
+            indent=4,
+            ensure_ascii=False,
+        )
+
+
+def load_chunks(path: Path) -> list[dict]:
+    """Load chunk metadata from JSON."""
+
+    with open(
+        path,
+        "r",
+        encoding="utf-8",
+    ) as file:
+
+        return json.load(file)
