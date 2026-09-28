@@ -1,0 +1,22 @@
+[
+    {
+        "question": "How many days of annual leave do employees receive?",
+        "expected_source": "company_policy.txt",
+        "expected_text": "Employees receive 30 days of annual leave"
+    },
+    {
+        "question": "How far in advance should employees normally request leave?",
+        "expected_source": "company_policy.txt",
+        "expected_text": "at least two weeks in advance"
+    },
+    {
+        "question": "How many days per week can employees work remotely?",
+        "expected_source": "company_policy.txt",
+        "expected_text": "up to three days per week"
+    },
+    {
+        "question": "What must remote employees do during their working hours?",
+        "expected_source": "company_policy.txt",
+        "expected_text": "remain available"
+    }
+]
