@@ -1,40 +1,39 @@
-from pathlib import Path
-
-from src.config import RAW_DOCUMENTS_DIR
-from src.loader import load_documents
-from src.pipeline import (
-    answer_question,
-    build_knowledge_base,
+from src.config import (
+    INDEX_PATH,
+    CHUNKS_PATH,
+    TOP_K,
+)
+from src.embeddings import load_embedding_model
+from src.rag import create_rag_prompt
+from src.retriever import retrieve
+from src.vector_store import (
+    load_chunks,
+    load_index,
 )
 
 
 def main():
 
-    print("Loading documents...")
-
-    documents = load_documents(
-        RAW_DOCUMENTS_DIR
-    )
-
-    if not documents:
-        print(
-            "No documents found in:"
-        )
-        print(RAW_DOCUMENTS_DIR)
+    if not INDEX_PATH.exists():
+        print("Knowledge base not found.")
+        print("Run:")
+        print("python build_index.py")
         return
 
-    print(
-        f"Loaded {len(documents)} documents."
+    print("Loading knowledge base...")
+
+    index = load_index(
+        INDEX_PATH
     )
 
-    print("Building knowledge base...")
-
-    model, index, chunks = build_knowledge_base(
-        documents
+    chunks = load_chunks(
+        CHUNKS_PATH
     )
 
+    model = load_embedding_model()
+
     print(
-        f"Created {len(chunks)} chunks."
+        f"Loaded {len(chunks)} chunks."
     )
 
     print()
@@ -49,26 +48,32 @@ def main():
         if question.lower() == "exit":
             break
 
-        result = answer_question(
-            question=question,
+        results = retrieve(
+            query=question,
             model=model,
             index=index,
             chunks=chunks,
+            top_k=TOP_K,
+        )
+
+        prompt = create_rag_prompt(
+            question=question,
+            retrieved_chunks=results,
         )
 
         print()
         print("Retrieved sources:")
 
-        for chunk in result["retrieved_chunks"]:
+        for result in results:
 
             print(
-                f"- {chunk['source']} "
-                f"(score={chunk['score']:.3f})"
+                f"- {result['source']} "
+                f"(score={result['score']:.3f})"
             )
 
         print()
         print("RAG prompt:")
-        print(result["prompt"])
+        print(prompt)
 
         print()
         print("-" * 60)
