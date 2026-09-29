@@ -21,6 +21,8 @@ def build_knowledge_base(documents: list[dict]):
 
     chunks = []
 
+    chunk_id = 0
+
     for document in documents:
 
         document_chunks = word_chunker(
@@ -33,10 +35,14 @@ def build_knowledge_base(documents: list[dict]):
 
             chunks.append(
                 {
+                    "chunk_id": chunk_id,
                     "text": chunk,
                     "source": document["source"],
+                    "page": document["page"],
                 }
             )
+
+            chunk_id += 1
 
     model = load_embedding_model()
 
