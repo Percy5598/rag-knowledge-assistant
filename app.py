@@ -1,83 +1,110 @@
-from src.config import (
-    INDEX_PATH,
-    CHUNKS_PATH,
-    TOP_K,
-)
+import streamlit as st
+
+from src.config import CHUNKS_PATH, INDEX_PATH, TOP_K
 from src.embeddings import load_embedding_model
 from src.rag import create_rag_prompt
 from src.retriever import retrieve
-from src.vector_store import (
-    load_chunks,
-    load_index,
+from src.vector_store import load_chunks, load_index
+
+
+st.set_page_config(
+    page_title="RAG Knowledge Assistant",
+    page_icon="📚",
+    layout="wide",
 )
 
 
-def main():
-
-    if not INDEX_PATH.exists():
-        print("Knowledge base not found.")
-        print("Run:")
-        print("python build_index.py")
-        return
-
-    print("Loading knowledge base...")
-
-    index = load_index(
-        INDEX_PATH
-    )
-
-    chunks = load_chunks(
-        CHUNKS_PATH
-    )
-
+@st.cache_resource
+def load_resources():
     model = load_embedding_model()
+    index = load_index(INDEX_PATH)
+    chunks = load_chunks(CHUNKS_PATH)
 
-    print(
-        f"Loaded {len(chunks)} chunks."
+    return model, index, chunks
+
+
+st.title("📚 RAG Knowledge Assistant")
+
+st.write(
+    "Ask questions about the company's internal documents."
+)
+
+if not INDEX_PATH.exists():
+    st.error(
+        "Knowledge base not found. "
+        "Run `python build_index.py` first."
+    )
+    st.stop()
+
+
+model, index, chunks = load_resources()
+
+st.sidebar.header("Knowledge Base")
+
+st.sidebar.write(
+    f"Documents: "
+    f"{len(set(chunk['source'] for chunk in chunks))}"
+)
+
+st.sidebar.write(
+    f"Chunks: {len(chunks)}"
+)
+
+question = st.text_input(
+    "Ask a question",
+    placeholder="How many days of annual leave do employees receive?",
+)
+
+
+if question:
+
+    results = retrieve(
+        query=question,
+        model=model,
+        index=index,
+        chunks=chunks,
+        top_k=TOP_K,
     )
 
-    print()
-    print("RAG Knowledge Assistant")
-    print("Type 'exit' to quit.")
-    print()
+    if not results:
 
-    while True:
-
-        question = input("Question: ")
-
-        if question.lower() == "exit":
-            break
-
-        results = retrieve(
-            query=question,
-            model=model,
-            index=index,
-            chunks=chunks,
-            top_k=TOP_K,
+        st.warning(
+            "No relevant information was found "
+            "in the provided documents."
         )
+
+    else:
+
+        st.subheader("Retrieved Information")
+
+        for result in results:
+
+            with st.expander(
+                f"{result['source']} "
+                f"(similarity: {result['score']:.3f})"
+            ):
+
+                st.write(result["text"])
+
+                if result.get("page"):
+                    st.caption(
+                        f"Page {result['page']}"
+                    )
 
         prompt = create_rag_prompt(
             question=question,
             retrieved_chunks=results,
         )
 
-        print()
-        print("Retrieved sources:")
+        st.subheader("RAG Prompt")
 
-        for result in results:
+        st.code(
+            prompt,
+            language="text",
+        )
 
-            print(
-                f"- {result['source']} "
-                f"(score={result['score']:.3f})"
-            )
-
-        print()
-        print("RAG prompt:")
-        print(prompt)
-
-        print()
-        print("-" * 60)
-
-
-if __name__ == "__main__":
-    main()
+        st.info(
+            "Retrieval is working. "
+            "A production LLM can be connected to this "
+            "prompt for final answer generation."
+        )

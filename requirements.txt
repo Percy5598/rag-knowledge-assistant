@@ -3,3 +3,4 @@ faiss-cpu
 pymupdf
 numpy
 pytest
+streamlit

@@ -1,0 +1,9 @@
+IT Security Policy
+
+Employees must use strong passwords for all company accounts.
+
+Multi-factor authentication is required for all remote access.
+
+Company laptops must be locked whenever employees leave their desks.
+
+Employees must report suspected security incidents to the IT department immediately.

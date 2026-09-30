@@ -1,7 +1,5 @@
 from pathlib import Path
-
-import fitz
-
+import pymupdf
 
 def load_text_file(path: Path) -> list[dict]:
     """Load a text file as a single document."""
@@ -22,7 +20,7 @@ def load_text_file(path: Path) -> list[dict]:
 def load_pdf_file(path: Path) -> list[dict]:
     """Extract PDF text while preserving page numbers."""
 
-    document = fitz.open(path)
+    document = pymupdf.open(path)
 
     pages = []
 
