@@ -71,33 +71,3 @@ The architecture is designed so that an LLM can be connected to the generation c
 ## 👨‍💻 Author
 
 **Prashant Shrestha**
-
-## 🧠 Architecture
-
-```text
-Documents
-   ↓
-Text Extraction
-   ↓
-Chunking
-   ↓
-Embeddings
-   ↓
-FAISS Vector Search
-   ↓
-Relevant Context
-   ↓
-RAG Prompt
-   ↓
-Answer Generation
-```
-
-## 📌 Purpose
-
-This project was built to understand and implement the core components of a RAG system from the ground up, rather than relying entirely on high-level frameworks.
-
-The architecture is designed so that an LLM can be connected to the generation component later.
-
-## 👨‍💻 Author
-
-**Prashant Shrestha**
