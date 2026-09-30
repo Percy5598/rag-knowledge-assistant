@@ -1,4 +1,5 @@
 sentence-transformers
+torchvision
 faiss-cpu
 pymupdf
 numpy
