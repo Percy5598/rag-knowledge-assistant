@@ -21,27 +21,6 @@ A simple **Retrieval-Augmented Generation (RAG)** knowledge assistant that retri
 
 **Python · Sentence Transformers · FAISS · PyMuPDF · NumPy · Streamlit · Pytest**# RAG Knowledge Assistant
 
-A simple **Retrieval-Augmented Generation (RAG)** knowledge assistant that retrieves relevant information from company documents using semantic search.
-
-## 🚀 Live Demo
-
-**[Try the RAG Knowledge Assistant](https://rag-knowledge-assistant-101.streamlit.app/)**
-
-## 🔍 Features
-
-* PDF and TXT document processing
-* Text chunking with overlap
-* Sentence Transformer embeddings
-* FAISS vector search
-* Semantic document retrieval
-* Source-aware RAG prompt generation
-* Retrieval evaluation using Recall@K, Precision@K and MRR
-* Streamlit interface
-
-## 🛠️ Tech Stack
-
-**Python · Sentence Transformers · FAISS · PyMuPDF · NumPy · Streamlit · Pytest**
-
 ## 🧠 Architecture
 
 ```text
