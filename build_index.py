@@ -6,20 +6,12 @@ from src.config import (
     RAW_DOCUMENTS_DIR,
     CHUNKS_PATH,
 )
-from src.embeddings import (
-    create_embeddings,
-    load_embedding_model,
-)
+from src.embeddings import create_embeddings, load_embedding_model
 from src.loader import load_documents
-from src.vector_store import (
-    create_index,
-    save_chunks,
-    save_index,
-)
+from src.vector_store import create_index, save_chunks, save_index
 
 
 def main():
-
     print("Loading documents...")
 
     documents = load_documents(
@@ -37,6 +29,7 @@ def main():
     print("Creating chunks...")
 
     chunks = []
+    chunk_id = 0
 
     for document in documents:
 
@@ -50,10 +43,14 @@ def main():
 
             chunks.append(
                 {
+                    "chunk_id": chunk_id,
                     "text": chunk,
                     "source": document["source"],
+                    "page": document["page"],
                 }
             )
+
+            chunk_id += 1
 
     print(
         f"Created {len(chunks)} chunks."
@@ -92,9 +89,17 @@ def main():
     )
 
     print()
-    print("Knowledge base created successfully.")
-    print(f"Index: {INDEX_PATH}")
-    print(f"Chunks: {CHUNKS_PATH}")
+    print(
+        "Knowledge base created successfully."
+    )
+
+    print(
+        f"Index: {INDEX_PATH}"
+    )
+
+    print(
+        f"Chunks: {CHUNKS_PATH}"
+    )
 
 
 if __name__ == "__main__":
