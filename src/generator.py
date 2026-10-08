@@ -1,29 +1,23 @@
 import os
 
 from dotenv import load_dotenv
-from openai import OpenAI
+from google import genai
+
 
 load_dotenv()
 
-client = OpenAI(
-    base_url="https://router.huggingface.co/v1",
-    api_key=os.getenv("HF_TOKEN"),
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
 )
 
-MODEL_NAME = "openai/gpt-oss-120b"
+
+MODEL_NAME = "gemini-3.8-flash"
 
 
 def generate_answer(prompt: str) -> str:
-    response = client.chat.completions.create(
+    response = client.models.generate_content(
         model=MODEL_NAME,
-        messages=[
-            {
-                "role": "user",
-                "content": prompt,
-            }
-        ],
-        temperature=0.2,
-        max_tokens=500,
+        contents=prompt,
     )
 
-    return response.choices[0].message.content
+    return response.text

@@ -2,10 +2,10 @@ import streamlit as st
 
 from src.config import CHUNKS_PATH, INDEX_PATH, TOP_K
 from src.embeddings import load_embedding_model
+from src.generator import generate_answer
 from src.rag import create_rag_prompt
 from src.retriever import retrieve
 from src.vector_store import load_chunks, load_index
-
 
 st.set_page_config(
     page_title="RAG Knowledge Assistant",
@@ -103,8 +103,8 @@ if question:
             language="text",
         )
 
-        st.info(
-            "Retrieval is working. "
-            "A production LLM can be connected to this "
-            "prompt for final answer generation."
-        )
+        st.subheader("Answer")
+
+        answer = generate_answer(prompt)
+
+        st.write(answer)

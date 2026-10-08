@@ -1,9 +1,10 @@
+streamlit
 sentence-transformers
+torch
 torchvision
 faiss-cpu
 pymupdf
 numpy
 pytest
-streamlit
-openai
+google-genai
 python-dotenv
