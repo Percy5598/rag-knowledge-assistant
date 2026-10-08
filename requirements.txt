@@ -5,3 +5,5 @@ pymupdf
 numpy
 pytest
 streamlit
+openai
+python-dotenv
